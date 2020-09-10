@@ -1,0 +1,48 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    sudo apt-get update
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    sudo ./aws/install
+    sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+    aws --version
+  displayName: 'Install Aws'
+
+- script: |
+    aws configure set aws_access_key_id $(Access key ID2)
+    aws configure set aws_secret_access_key $(Secret access key2)
+    aws configure set aws_session_token $(Token)
+    aws configure set default.region us-east-1
+    aws configure list
+  displayName: 'configure aws'
+
+- script: |
+    npm install 
+  displayName: 'Install dependencies'
+
+- script: |
+    sudo npm run test:unit
+  displayName: 'Run test'
+
+- script: |
+    sudo npm run build
+    cd dist
+    sudo ls
+    aws s3 sync ./ s3://$(BucketS3)/
+  displayName: 'build app'
