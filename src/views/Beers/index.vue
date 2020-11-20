@@ -6,6 +6,7 @@
 </template>
 
 <script>  
+  import axios from'axios'  
   import tableRecomendations from '@/views/Beers/table.vue'  
   export default {
     name: 'recomendations',
@@ -26,8 +27,7 @@
     },
     created () {
       var self = this
-
-      this.axios.get('auth/recommendation?userId='+this.$store.state.UserId+'&recommendationId=0')
+      axios.get('https://6nlk8s2xu7.execute-api.us-west-1.amazonaws.com/dev/api/v1/users')
       .then(function(r){
         self.recommendation = r.data
         
@@ -36,6 +36,13 @@
         self.recommendation = []
       })
     },
+    edit(id) {
+        this.$router.push({
+                path: '/beer/edit/' + id
+            });
+
+        },
+
     methods: {
     }
   }

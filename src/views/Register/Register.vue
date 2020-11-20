@@ -9,26 +9,18 @@
           <v-card-text>
                 <v-form>
                     <v-text-field
+                        v-model="email"
+                        :rules="emailRules"
+                        label="Correo electronico"
+                        name="Correo"
+                        prepend-icon="mdi-account"
+                        type="text"
+                    ></v-text-field>
+                    <v-text-field
                         v-model="name"
                         :rules="nameRules"
-                        label="Name"
-                        name="login"
-                        prepend-icon="mdi-account"
-                        type="text"
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="lastName"
-                        :rules="nameRules"
-                        label="LastName"
-                        name="LastName"
-                        prepend-icon="mdi-account"
-                        type="text"
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="userName"
-                        :rules="nameRules"
-                        label="Username"
-                        name="Username"
+                        label="Nombre"
+                        name="Nobre"
                         prepend-icon="mdi-account"
                         type="text"
                     ></v-text-field>
@@ -59,6 +51,7 @@
 </template>
 <script>
   import axios from 'axios';
+  import firebase from 'firebase';
   export default {
     data () {
       return {
@@ -66,7 +59,7 @@
       process: false,      
       drawer: null,
       name: '',
-      lastName: '',
+      email: '',
       userName: '',
       nameRules: [
         v => !!v || 'Name is required',
@@ -91,6 +84,7 @@
   },
     methods: {
      register() {
+       /*
         let endpoint = 'http://localhost:8080/auth/account'
         let payload = {
           User: { 
@@ -117,7 +111,20 @@
           .catch((err) => {
             console.error(err)
             return console.error(err)
-          })
+          })*/
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then(data => {
+           data.user.updateProfile({
+              displayName: this.name
+            })
+            .then(() => {
+              this.$router.replace({ name: "Login" });
+            });
+        })
+        .catch(err => {
+          console.log(err)
+          this.error = err.message;
+        });
       }
     }
   }

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login/Login.vue'
 import Beers from '../views/Beers/index.vue'
+import addBeers from '../views/Beers/add.vue'
 import Register from '../views/Register/Register.vue'
 import NotFound from '../views/NotFound/404.vue'
 import store from '../store'
@@ -39,6 +40,17 @@ Vue.use(VueRouter)
     component: Register 
   },
   {
+    path: '/beer/add',
+    name: 'Addbeer',
+    component: addBeers 
+  },
+  {
+		name: 'BeeEdit',
+		path: '/beer/edit/:idBeer',
+		component:addBeers,
+		props: true
+  	},	
+  {
     path: '*',
     name: 'NotFound',
     component: NotFound
@@ -56,9 +68,9 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/register'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = store.getters.userautenticate;
-  /*if(authRequired &&!loggedIn){
+  if(authRequired &&!loggedIn){
     next('/login');
-  }*/
+  }
   next();
 })
 

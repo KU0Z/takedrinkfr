@@ -9,14 +9,25 @@
           <div class="text-right">
             <div class="display-2" style="margin: 18vh auto 0 auto;">Log In</div>                                  
           </div>          
-          <v-card-text>
-                <v-form>
+          <v-card-text >
+          
+                <v-form ref="form" v-model="valid">
+                    <v-alert
+                      :value="error"
+                      type="error"
+                      class="mb-2"
+                    >
+                      Ocurrio un error con la authenticacion prube otra vez 
+                    </v-alert>
                     <v-text-field
-                        v-model="userName"
-                        label="E-mail"
-                        name="login"
-                        prepend-icon="mdi-at"
+                        v-on:keyup.13 ="reset()"
+                        v-model="email"
+                        label="Correo Electronico"
+                        name="Correo"
+                        prepend-icon="mdi-email"
+                        :rules="emailRules"
                         type="text"
+                        required
                     ></v-text-field>
 
                     <v-text-field
@@ -24,13 +35,17 @@
                         id="password"
                         label="Password"
                         name="password"
+                        :rules="passwordRules"
                         prepend-icon="mdi-lock"
                         type="password"
+                        required
+                        @keyup.enter="login()"
                     ></v-text-field>
+                    <v-btn block color="primary" :disabled="!valid"  @click="login()" >Acceso</v-btn>
                 </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn block color="primary" @click="login()" >Acceso</v-btn>
+            
             <div>
                 
             </div>
@@ -47,9 +62,11 @@
 </template>
 <script>
   import axios from 'axios';
+  import firebase from 'firebase';
   export default {
     data () {
       return {
+      valid: true,
       maintenance: false,
       process: false,      
       drawer: null,
@@ -58,11 +75,14 @@
       userName: '',
       nameRules: [
         v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        v => (v && v.length <= 20) || 'Name must be less than 10 characters',
       ],
       emailRules: [
         v => !!v || 'Correo requerido',
         v => /.+@.+/.test(v) || 'El correo debe ser válido'
+      ],
+      passwordRules: [
+        v => !!v || 'Contraseña requerida'
       ],
       email: "",
       password: "",
@@ -77,9 +97,29 @@
   },
   mounted:function (){
   },
+
     methods: {
+       reset () {
+        this.error=false
+      },
+       validate () {
+        this.$refs.form.validate()
+      },
      login() {
-        let endpoint = 'http://localhost:8080/account/authentication'
+       firebase
+      .auth()
+      .signInWithEmailAndPassword(this.email, this.password)
+      .then(data => {
+        console.log(data.user)
+        this.$store.dispatch('AUTH',data.user)
+        self.error=false
+        this.$router.replace({ name: "Home" });
+      })
+      .catch(err => {
+        this.error = err.message;
+      });
+
+        /*let endpoint = 'http://localhost:8080/account/authentication'
         let payload = {
           
               UserName :this.userName,
@@ -95,26 +135,34 @@
           };
 
         let self=this
+        self.error=false
         this.axios.post('auth/account/authentication',payload)
-          .then((res) => {            
+          .then((res) => {  
+            this.$store.dispatch('TOKEN',res.data)          
               self.axios.get('auth/user?userId='+res.data.UserId)
                 .then((res) => {
-                    console.log(res.data)
+                  console.log('yes')
+                    console.log(res)
+                    self.error=false
                     this.$store.dispatch('AUTH',res.data)
                   
                 })
                 .catch((err) => {
-                  console.error(err)
+                  console.log('yes')
+                  self.error=true
+                  //console.error(err)
         
                 })
-              this.$store.dispatch('AUTH',res.data.UserId)
+              //this.$store.dispatch('AUTH',res.data.UserId)
              
           })
           .catch((err) => {
+             self.error=true
              console.error(err)
+             console.log('no')
   
-          })
+          })*/
       }
     }
   }
-</script> 
+</script>
