@@ -306,8 +306,8 @@
                     "description" :this.description,
                     "image":this.picture,
                     "price": this.email,
-                    "type": this.type.value,
-                    "country": this.contry.value
+                    "type": this.type,
+                    "country": this.contry
                 }
               let options = {
                   headers: { 
@@ -315,10 +315,11 @@
                       'Content-type': 'application/json'
                   },
                 };
+                let self=this
               axios.put('https://6nlk8s2xu7.execute-api.us-west-1.amazonaws.com/dev/api/v1/beers/'+this.idBeer, payload,options)
             .then(function(r){
 
-              this.$router.push('/beers' );
+              self.$router.push({ name: 'Home' });
               
             })
             .catch(function(r){
@@ -332,8 +333,8 @@
                     "description" :this.description,
                     "image":this.picture,
                     "price": this.email,
-                    "type": this.type.value,
-                    "country": this.contry.value
+                    "type": this.type,
+                    "country": this.contry
                 }
               let options = {
                   headers: { 
@@ -341,10 +342,11 @@
                       'Content-type': 'application/json'
                   },
                 };
+                let self=this
               axios.post(' https://6nlk8s2xu7.execute-api.us-west-1.amazonaws.com/dev/api/v1/beers', payload,options)
             .then(function(r){
 
-              this.$router.push('/beers' );
+              self.$router.push({ name: 'Home' });
               
             })
             .catch(function(r){

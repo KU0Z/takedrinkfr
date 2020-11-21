@@ -37,7 +37,7 @@
             </v-card-title>
 
             <v-card-subtitle>
-              {{contries[card.type].name}}
+              {{contries[card.type-1]}}
             </v-card-subtitle>
                 </v-card-actions>
               <v-card-actions>
@@ -46,7 +46,7 @@
             </v-card-title>
 
             <v-card-subtitle>
-              {{types[card.type].name}}
+              {{ types[card.type-1] }}
             </v-card-subtitle>
                 </v-card-actions>
             <v-card-actions>
@@ -86,20 +86,14 @@
     data(){
       return {
         search: '',
-        contries: [{ name: 'Guatemala', value: 1 }, 
-      { name: 'Alemania', value: 2 },
-      { name: 'Inglaterra', value: 3 }, 
-      { name: 'Irlanda', value: 4 },],
+        contries: [ "Guatemala","Alemania","Inglaterra","Irlanda"],
+        types: [ "Lager","Ale","Rubia","Stout"],
       type: 0,
-      types: [{ name: 'Lager', value: 1 }, 
-      { name: 'Ale', value: 2 },
-      { name: 'Rubia', value: 3 }, 
-      { name: 'Stout ', value: 4 },],
         cards: [
-        { price: 10, title: 'Gallo', src: 'https://www.estrategiaynegocios.net/csp/mediapool/sites/dt.common.streams.StreamServer.cls?STREAMOID=CBhMWywFctVLduxdaVhhmc$daE2N3K4ZzOUsqbU5sYtVrqv4aj8No4ChKgGIpdsg6FB40xiOfUoExWL3M40tfzssyZqpeG_J0TFo7ZhRaDiHC9oxmioMlYVJD0A$3RbIiibgT65kY_CSDiCiUzvHvODrHApbd6ry6YGl5GGOZrs-&amp;CONTENTTYPE=image/jpeg', flex: 3 },
-        { price: 35, title: 'Guinnes', src: 'https://m.eltiempo.com/uploads/2020/05/28/5ed06cee78eab.jpeg', flex: 3 },
-        { price: 33, title: 'Fuller´s Black Cab Stout', src: 'https://www.elbunkker.com.uy/wp-content/uploads/2019/08/Cerveza-Fuller%C2%B4s-Black-Cab-Stout-500ml-Pack-12-Unidades-3.jpg', flex: 3 },
-        { price: 25, title: 'Fuller`s London Pride', src: 'https://br-info.beer/im/fuller_s_london_pride1.jpg.pagespeed.ce.0okrW8Gh4t.jpg', flex: 3 },
+        { type:1 ,price: 10, "name": 'Gallo', image: 'https://www.estrategiaynegocios.net/csp/mediapool/sites/dt.common.streams.StreamServer.cls?STREAMOID=CBhMWywFctVLduxdaVhhmc$daE2N3K4ZzOUsqbU5sYtVrqv4aj8No4ChKgGIpdsg6FB40xiOfUoExWL3M40tfzssyZqpeG_J0TFo7ZhRaDiHC9oxmioMlYVJD0A$3RbIiibgT65kY_CSDiCiUzvHvODrHApbd6ry6YGl5GGOZrs-&amp;CONTENTTYPE=image/jpeg', flex: 3 },
+        { type:1 ,price: 35, "name": 'Guinnes', image: 'https://m.eltiempo.com/uploads/2020/05/28/5ed06cee78eab.jpeg', flex: 3 },
+        { type:1 ,price: 33, "name": 'Fuller´s Black Cab Stout', image: 'https://www.elbunkker.com.uy/wp-content/uploads/2019/08/Cerveza-Fuller%C2%B4s-Black-Cab-Stout-500ml-Pack-12-Unidades-3.jpg', flex: 3 },
+        { type:1 ,price: 25, "name": 'Fuller`s London Pride', image: 'https://br-info.beer/im/fuller_s_london_pride1.jpg.pagespeed.ce.0okrW8Gh4t.jpg', flex: 3 },
       ],
       }
     },
@@ -135,10 +129,9 @@
           .then((res) => {            
               
               console.log(res)
-              this.cards=res.data
-              array.forEach(element => {
-                
-              });
+              self.cards=res.data
+              self.contries = JSON.parse(self.contries)
+              self.types = JSON.parse(self.types)
              
           })
           .catch((err) => {
